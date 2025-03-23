@@ -6,7 +6,7 @@ use App\Filament\Resources\transaksipenjualanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
-class Createtransaksipenjualan extends CreateRecord
+class CreateTransaksipenjualan extends CreateRecord
 {
     protected static string $resource = transaksipenjualanResource::class;
 }
