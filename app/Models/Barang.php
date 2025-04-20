@@ -41,4 +41,9 @@ class Barang extends Model
         // Hapus koma (,) dari nilai sebelum menyimpannya ke database
         $this->attributes['harga_barang'] = str_replace('.', '', $value);
     }
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'kode_supplier', 'kode_supplier');
+    }
+    
 }
