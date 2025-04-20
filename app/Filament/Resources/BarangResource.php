@@ -14,6 +14,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Radio;
 
 class BarangResource extends Resource
 {
@@ -39,15 +41,25 @@ class BarangResource extends Resource
                     ->required()
                     ->placeholder('Masukkan nama barang'),
 
-                TextInput::make('kategori_barang')
+                select::make('kategori_barang')
                     ->label('Kategori Barang')
-                    ->required()
-                    ->placeholder('Masukkan kategori barang (misal: Kaos, Kemeja, dll.)'),
+                    ->options([
+                        'Kemeja' => 'Kemeja',
+                        'Jaket' => 'Jaket',
+                        'Kaos' => 'Kaos',
+                    ])
+                    ->required(),
 
-                TextInput::make('ukuran')
-                    ->label('Ukuran')
-                    ->required()
-                    ->placeholder('Masukkan ukuran (S, M, L, XL, XXL.)'),
+                select::make('ukuran')
+                    ->label('Ukuran Barang')
+                    ->options([
+                        'S' => 'S',
+                        'M' => 'M',
+                        'L' => 'L',
+                        'XL' => 'XL',
+                        'XXL' => 'XXL',
+                    ])
+                    ->required(),
 
                 TextInput::make('harga_barang')
                     ->label('Harga Barang')
@@ -71,6 +83,12 @@ class BarangResource extends Resource
                     ->placeholder('Masukkan jumlah stock')
                     ->minValue(0)
                     ->numeric(),
+                Select::make('kode_supplier')
+                    ->label('Supplier')
+                    ->relationship('supplier', 'nama') // 'nama' = kolom nama supplier
+                    ->searchable()
+                    ->required(),
+                
             ]);
     }
 
@@ -112,6 +130,10 @@ class BarangResource extends Resource
                 TextColumn::make('stock')
                     ->label('Stock')
                     ->sortable(),
+                TextColumn::make('supplier.nama')
+                    ->label('Supplier')
+                    ->sortable()
+                    ->searchable(),                
             ])
             ->filters([
                 // Tambahkan filter jika diperlukan
