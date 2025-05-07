@@ -14,5 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
+// login customer
+Route::get('/depan', [App\Http\Controllers\KeranjangController::class, 'daftarbarang']);
+Route::get('/login', [App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
