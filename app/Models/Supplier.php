@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB; // <- import DB facade
+
+// tambahan
+use Illuminate\Support\Facades\DB;
 
 class Supplier extends Model
 {
@@ -12,45 +14,26 @@ class Supplier extends Model
 
     protected $table = 'supplier'; // Nama tabel eksplisit
 
-    // Agar tidak bisa di‐override lewat mass assignment
-    protected $guarded = ['kode_supplier'];
+    protected $guarded = []; //semua kolom boleh di isi
 
-    /**
-     * Boot model events.
-     */
-    protected static function booted()
-    {
-        static::creating(function (Supplier $supplier) {
-            // Set kode_supplier otomatis sebelum insert
-            $supplier->kode_supplier = self::getKodeSupplier();
-        });
-    }
-
-    /**
-     * Hitung kode baru berdasarkan MAX(kode_supplier) di tabel.
-     *
-     * @return string Contoh: 'SP001', 'SP002', dst.
-     */
     public static function getKodeSupplier()
     {
         // query kode perusahaan
-        $sql = "SELECT IFNULL(MAX(kode_supplier), 'SP000') as kode_supplier 
-                FROM supplier";
+        $sql = "SELECT IFNULL(MAX(kode_supplier), 'S-00000') as kode_supplier
+                FROM supplier ";
         $kodesupplier = DB::select($sql);
 
-        // ambil hasilnya
-        $kd = 'SP000';
-        foreach ($kodesupplier as $kdsp) {
-            $kd = $kdsp->kode_supplier;
+        // cacah hasilnya
+        foreach ($kodesupplier as $kdsupp) {
+            $kd = $kdsupp->kode_supplier;
         }
+        // Mengambil substring tiga digit akhir dari string PR-000
+        $noawal = substr($kd,-5);
+        $noakhir = $noawal+1; //menambahkan 1, hasilnya adalah integer cth 1
+        $noakhir = 'S-'.str_pad($noakhir,5,"0",STR_PAD_LEFT); //menyambung dengan string S-00001
+        return $noakhir;
 
-        // ambil 3 digit terakhir, tambahkan 1, lalu format kembali
-        $noawal  = (int) substr($kd, -3);
-        $noakhir = $noawal + 1;
-        return 'SP' . str_pad($noakhir, 3, "0", STR_PAD_LEFT);
     }
-    public function barang()
-    {
-        return $this->hasMany(Barang::class, 'kode_supplier');
-    }
+
 }
+

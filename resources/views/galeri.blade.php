@@ -3,6 +3,22 @@
 @section('konten')
 <body>
 
+<!-- Tambahan Sweet Alert -->
+@if(session('success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Berhasil!",
+                text: "{{ session('success') }}",
+                icon: "success",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        });
+    </script>
+@endif
+<!-- Akhir Tambahan Sweet Alert -->
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <defs>
     <symbol xmlns="http://www.w3.org/2000/svg" id="link" viewBox="0 0 24 24">
@@ -65,7 +81,7 @@
   <div class="offcanvas-body">
     <div class="order-md-last">
       <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-primary">Your cart {{Auth::id()}}</span>
+        <span class="text-primary">Your cart {{Auth::user()->name}}</span>
         <span class="badge bg-primary rounded-pill">3</span>
       </h4>
       <ul class="list-group mb-3">
@@ -167,6 +183,16 @@
           </li>
         </ul>
 
+        <!-- Untuk Icon User -->
+        <ul class="d-flex justify-content-end list-unstyled m-0">
+          <li>
+            <a href="{{ url('/ubahpassword') }}" class="rounded-circle bg-light p-2 mx-1">
+              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#user"></use></svg>
+            </a>
+          </li>
+        </ul>
+        <!-- Akhir Icon User -->
+
         <div class="cart text-end d-none d-lg-block dropdown">
           <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
             <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
@@ -193,77 +219,42 @@
           </div>
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-
-            
              <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                  
-				  <div class="col">
-					
-					<div class="product-item">
-                        <span class="badge bg-success position-absolute m-3">-30%</span>
-                        <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
-                        <figure>
-                          <a href="index.html" title="Product Title">
-                            <img src="images/thumb-bananas.png"  class="tab-image">
-                          </a>
-                        </figure>
-                        <h3>Sunstar Fresh Melon Juice</h3>
-                        <span class="qty">1 Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span>
-                        <span class="price">$18.00</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                          <div class="input-group product-qty">
-                              <span class="input-group-btn">
-                                  <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
-                                    <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
-                                  </button>
-                              </span>
-                              <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1">
-                              <span class="input-group-btn">
-                                  <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
-                                      <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
-                                  </button>
-                              </span>
-                          </div>
-                          <a href="#" class="nav-link">Add to Cart <iconify-icon icon="uil:shopping-cart"></a>
-                        </div>
-                    </div>
-                </div>
-
-
+                @foreach($barang as $p)
                 <div class="col">
-                      <div class="product-item">
-                        <span class="badge bg-success position-absolute m-3">-30%</span>
-                        <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
-                        <figure>
-                          <a href="index.html" title="Product Title">
-                            <img src="images/thumb-biscuits.png"  class="tab-image">
-                          </a>
-                        </figure>
-                        <h3>Sunstar Fresh Melon Juice</h3>
-                        <span class="qty">1 Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span>
-                        <span class="price">$18.00</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                          <div class="input-group product-qty">
-                              <span class="input-group-btn">
-                                  <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
-                                    <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
-                                  </button>
-                              </span>
-                              <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1">
-                              <span class="input-group-btn">
-                                  <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
-                                      <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
-                                  </button>
-                              </span>
-                          </div>
-                          <a href="#" class="nav-link">Add to Cart <iconify-icon icon="uil:shopping-cart"></a>
-                        </div>
+                  <div class="product-item">
+                    <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
+                    <figure>
+                      <a href="{{ Storage::url($p->foto) }}" title="Product Title">
+                        <img src="{{ Storage::url($p->foto) }}" class="tab-image">
+                        <!-- <img src="images/thumb-bananas.png"  class="tab-image"> -->
+                      </a>
+                    </figure>
+                    <h3>{{$p->nama_barang}}</h3>
+                    <span class="qty">{{ $p->stok }} Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> {{ $p->rating }}</span>
+                    <span class="price">{{rupiah($p->harga_barang)}}</span>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="input-group product-qty">
+                        <span class="input-group-btn">
+                            <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-id="{{ $p->id }}" data-type="minus">
+                              <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
+                            </button>
+                        </span>
+                        <input type="text" id="quantity-{{ $p->id }}" name="quantity" class="form-control input-number" value="1">
+                        <span class="input-group-btn">
+                            <button type="button" class="quantity-right-plus btn btn-success btn-number" data-id="{{ $p->id }}" data-type="plus">
+                                <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
+                            </button>
+                        </span>
                       </div>
+                      <a href="#" class="nav-link">Add to Cart <iconify-icon icon="uil:shopping-cart"></a>
                     </div>
-            
+                  </div>
+                </div>
+                @endforeach
+              </div>
               <!-- / product-grid -->
               
-            </div>
             
           </div>
         </div>
@@ -273,5 +264,7 @@
   </div>
 </section>
 
+
+<!--  -->
 
 @endsection
