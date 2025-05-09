@@ -26,6 +26,8 @@ class ListSupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'ListSupplier';
 
+     protected static ?string $navigationGroup = 'Masterdata';
+
     public static function form(Form $form): Form
     {
         return $form
