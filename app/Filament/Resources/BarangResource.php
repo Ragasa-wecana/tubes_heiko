@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
@@ -20,6 +21,9 @@ class BarangResource extends Resource
     protected static ?string $model = Barang::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    // tambahan untuk grooping
+    protected static ?string $navigationGroup = 'Masterdata';
 
     /**
      * Form untuk create & edit data.
@@ -39,15 +43,24 @@ class BarangResource extends Resource
                     ->required()
                     ->placeholder('Masukkan nama barang'),
 
-                TextInput::make('kategori_barang')
+                Select::make('kategori_barang')
                     ->label('Kategori Barang')
-                    ->required()
-                    ->placeholder('Masukkan kategori barang (misal: Kaos, Kemeja, dll.)'),
+                    ->options([
+                        'New Arrival' => 'New Arrival',
+                        'Atasan' => 'Atasan',
+                        'Bawahan' => 'Bawahan',
+                ]),
 
-                TextInput::make('ukuran')
+                Select::make('ukuran')
                     ->label('Ukuran')
-                    ->required()
-                    ->placeholder('Masukkan ukuran (S, M, L, XL, XXL.)'),
+                    ->options([
+                        'S' => 'S',
+                        'M' => 'M',
+                        'L' => 'L',
+                        'XL' => 'XL',
+                        'XXL' => 'XXL',
+                        'XXXL' => 'XXXL',
+                ]),
 
                 TextInput::make('harga_barang')
                     ->label('Harga Barang')
@@ -71,6 +84,7 @@ class BarangResource extends Resource
                     ->placeholder('Masukkan jumlah stock')
                     ->minValue(0)
                     ->numeric(),
+                
             ]);
     }
 

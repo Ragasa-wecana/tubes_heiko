@@ -6,7 +6,7 @@ use App\Filament\Resources\transaksipenjualanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class Listtransaksipenjualans extends ListRecords
+class ListTransaksiPenjualans extends ListRecords
 {
     protected static string $resource = transaksipenjualanResource::class;
 

@@ -6,7 +6,7 @@ use App\Filament\Resources\transaksipenjualanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class Edittransaksipenjualan extends EditRecord
+class EditTransaksiPenjualan extends EditRecord
 {
     protected static string $resource = transaksipenjualanResource::class;
 
