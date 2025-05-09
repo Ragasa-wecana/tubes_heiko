@@ -3,22 +3,6 @@
 @section('konten')
 <body>
 
-<!-- Tambahan Sweet Alert -->
-@if(session('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                title: "Berhasil!",
-                text: "{{ session('success') }}",
-                icon: "success",
-                timer: 3000,
-                showConfirmButton: false
-            });
-        });
-    </script>
-@endif
-<!-- Akhir Tambahan Sweet Alert -->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <defs>
     <symbol xmlns="http://www.w3.org/2000/svg" id="link" viewBox="0 0 24 24">
@@ -186,7 +170,7 @@
         <!-- Untuk Icon User -->
         <ul class="d-flex justify-content-end list-unstyled m-0">
           <li>
-            <a href="{{ url('/ubahpassword') }}" class="rounded-circle bg-light p-2 mx-1">
+            <a href="#" class="rounded-circle bg-light p-2 mx-1">
               <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#user"></use></svg>
             </a>
           </li>
@@ -206,65 +190,57 @@
   
 </header>
 
-
+<!-- Section ubah password -->
 <section class="py-5">
-  <div class="container-fluid">
-    
-    <div class="row">
-      <div class="col-md-12">
+    <div class="container-fluid">
 
-        <div class="bootstrap-tabs product-tabs">
-          <div class="tabs-header d-flex justify-content-between border-bottom my-5">
-            <h3>Produk Terbaru</h3>
-          </div>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-             <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                @foreach($barang as $p)
-                <div class="col">
-                  <div class="product-item">
-                    <a href="#" class="btn-wishlist"><svg width="24" height="24"><use xlink:href="#heart"></use></svg></a>
-                    <figure>
-                      <a href="{{ Storage::url($p->foto) }}" title="Product Title">
-                        <img src="{{ Storage::url($p->foto) }}" class="tab-image">
-                        <!-- <img src="images/thumb-bananas.png"  class="tab-image"> -->
-                      </a>
-                    </figure>
-                    <h3>{{$p->nama_barang}}</h3>
-                    <span class="qty">{{ $p->stok }} Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> {{ $p->rating }}</span>
-                    <span class="price">{{rupiah($p->harga_barang)}}</span>
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div class="input-group product-qty">
-                        <span class="input-group-btn">
-                            <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-id="{{ $p->id }}" data-type="minus">
-                              <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
-                            </button>
-                        </span>
-                        <input type="text" id="quantity-{{ $p->id }}" name="quantity" class="form-control input-number" value="1">
-                        <span class="input-group-btn">
-                            <button type="button" class="quantity-right-plus btn btn-success btn-number" data-id="{{ $p->id }}" data-type="plus">
-                                <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
-                            </button>
-                        </span>
-                      </div>
-                      <a href="#" class="nav-link">Add to Cart <iconify-icon icon="uil:shopping-cart"></a>
+    <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('images/bg-leaves-img-pattern.png') no-repeat;">
+        <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6 p-5">
+            <div class="section-header">
+                <h2 class="section-title display-4">Ubah <span class="text-primary">Password</span></h2>
+            </div>
+            </div>
+            <div class="col-md-6 p-5">
+                <!-- Tambahan untuk menampilkan error jika ada -->
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
                     </div>
-                  </div>
+                @endif
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                 <!-- Akhir tambahan menampilkan error -->
+            <form action="{{ url('prosesubahpassword') }}" method="post">
+            @csrf
+                <div class="mb-3">
+                <label for="name" class="form-label">Password</label>
+                <input type="password"
+                    class="form-control form-control-lg" name="password" id="password" placeholder="Masukkan Passsword Baru Anda">
                 </div>
-                @endforeach
-              </div>
-              <!-- / product-grid -->
-              
+                
+                <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-dark btn-lg">Submit</button>
+                </div>
+            </form>
             
-          </div>
+            </div>
+            
         </div>
-
-      </div>
+        
+        </div>
     </div>
-  </div>
+    
+    </div>
 </section>
-
-
-<!--  -->
 
 @endsection
