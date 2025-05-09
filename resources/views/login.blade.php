@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Heiko - Login</title>
+  <title>Heiko</title>
   <link rel="shortcut icon" href="{{ asset('images/logos/favicon.png') }}" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
