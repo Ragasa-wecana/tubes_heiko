@@ -22,9 +22,6 @@ class BarangResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // tambahan untuk grooping
-    protected static ?string $navigationGroup = 'Masterdata';
-
     /**
      * Form untuk create & edit data.
      */
