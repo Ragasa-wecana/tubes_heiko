@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +14,15 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    //return view('welcome');
-    //diarahkan ke login customer
+    // return view('welcome');
+    // diarahkan ke login customer
     return view('login');
 });
 
+
 // login customer
 Route::get('/depan', [App\Http\Controllers\KeranjangController::class, 'daftarbarang'])
-     ->middleware(\App\Http\Middleware\CustomerMiddleware::class)
+     ->middleware('customer')
      ->name('depan');
 Route::get('/login', function () {
     return view('login');
@@ -38,9 +38,12 @@ Route::get('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/login');
 })->name('logout');
+
 // untuk ubah password
 Route::get('/ubahpassword', [App\Http\Controllers\AuthController::class, 'ubahpassword'])
-    ->middleware(\App\Http\Middleware\CustomerMiddleware::class)
+    ->middleware('customer')
     ->name('ubahpassword');
 Route::post('/prosesubahpassword', [App\Http\Controllers\AuthController::class, 'prosesubahpassword'])
-    ->middleware(\App\Http\Middleware\CustomerMiddleware::class);
+    ->middleware('customer')
+;
+// prosesubahpassword

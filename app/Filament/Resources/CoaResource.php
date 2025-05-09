@@ -2,6 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms\Components\TextInput; //kita menggunakan textinput
+use Filament\Forms\Components\Grid;
+
+use Filament\Tables\Columns\TextColumn;
+
 use App\Filament\Resources\CoaResource\Pages;
 use App\Filament\Resources\CoaResource\RelationManagers;
 use App\Models\Coa;
@@ -19,14 +24,27 @@ class CoaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // tambahan untuk grooping
-    protected static ?string $navigationGroup = 'Masterdata';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Grid::make(1) // Membuat hanya 1 kolom
+                ->schema([
+                    TextInput::make('header_akun')
+                        ->required()
+                        ->placeholder('Masukkan header akun')
+                    ,
+                    TextInput::make('kode_akun')
+                        ->required()
+                        ->placeholder('Masukkan kode akun')
+                    ,
+                    TextInput::make('nama_akun')
+                        ->autocapitalize('words')
+                        ->label('Nama akun')
+                        ->required()
+                        ->placeholder('Masukkan nama akun')
+                    ,
+                ]),
             ]);
     }
 
@@ -34,13 +52,27 @@ class CoaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('header_akun'),
+                TextColumn::make('kode_akun'),
+                TextColumn::make('nama_akun')
+                    ->sortable()
+                    ->searchable()
+                , 
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('header_akun')
+                    ->options([
+                        1 => 'Aset/Aktiva',
+                        2 => 'Utang',
+                        3 => 'Modal',
+                        4 => 'Pendapatan',
+                        5 => 'Beban',
+                    ]),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -49,13 +81,7 @@ class CoaResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
+  
     public static function getPages(): array
     {
         return [

@@ -22,6 +22,6 @@ class CustomerMiddleware
         }
 
         // Jika bukan admin, redirect ke halaman lain atau tampilkan error
-        return abort(403, 'Anda tidak memiliki akses');
+        abort(403, 'Anda tidak memiliki akses');
     }
 }

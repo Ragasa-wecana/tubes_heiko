@@ -50,10 +50,10 @@ class PembeliResource extends Resource
                             $set('nama_pembeli', $user->name);
                         }
                     })
-                , 
+                ,
 
                 TextInput::make('kode_pembeli')
-                    ->default(fn () => Pembeli::getKodePembeli()) // Ambil default dari method getKodePembeli
+                    ->default(fn() => Pembeli::getKodePembeli()) // Ambil default dari method getKodePembeli
                     ->label('Kode Pembeli')
                     ->required()
                     ->readonly() // Membuat field menjadi read-only

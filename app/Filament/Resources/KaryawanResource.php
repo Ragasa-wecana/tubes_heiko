@@ -2,97 +2,105 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms\Components\TextInput; // kita menggunakan textinput
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\DatePicker; // Menambahkan DatePicker untuk tanggal
-use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\KaryawanResource\Pages;
-use App\Filament\Resources\KaryawanResource\RelationManagers;
 use App\Models\Karyawan;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder; 
-use Illuminate\Database\Eloquent\SoftDeletingScope; 
-
-use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\TextColumn;
 
 class KaryawanResource extends Resource
 {
     protected static ?string $model = Karyawan::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    // tambahan untuk grooping
-    protected static ?string $navigationGroup = 'Masterdata';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Grid::make(1) // Membuat hanya 1 kolom
-                    ->schema([
-                        TextInput::make('id_karyawan')
-                        ->default(fn () => karyawan::getIdKaryawan())
-                        ->label('Id karyawan')
-                        ->required()
-                        ->readonly(),
+        return $form->schema([
+            Grid::make(1)->schema([
+                TextInput::make('no_ktp')
+                    ->label('No KTP')
+                    ->autocapitalize('none')
+                    ->required()
+                    ->placeholder('Masukkan nomor KTP'),
 
-                        TextInput::make('nama_karyawan')
-                            ->autocapitalize('words')
-                            ->label('Nama karyawan')
-                            ->required()
-                            ->placeholder('Masukkan nama karyawan'),
+                TextInput::make('nama_karyawan')
+                    ->label('Nama Karyawan')
+                    ->autocapitalize('words')
+                    ->required()
+                    ->placeholder('Masukkan nama karyawan'),
 
-                        TextInput::make('jabatan')
-                            ->autocapitalize('words')
-                            ->label('Jabatan karyawan')
-                            ->required()
-                            ->placeholder('Masukkan jabatan karyawan'),
+                TextInput::make('jabatan')
+                    ->label('Jabatan')
+                    ->autocapitalize('words')
+                    ->required()
+                    ->placeholder('Masukkan jabatan karyawan'),
 
-                        TextInput::make('alamat_karyawan')
-                            ->autocapitalize('words')
-                            ->label('Alamat karyawan')
-                            ->required()
-                            ->placeholder('Masukkan alamat karyawan'),
+                TextInput::make('nomor_telepon')
+                    ->label('No Telepon')
+                    ->required()
+                    ->placeholder('Masukkan nomor telepon'),
 
-                        TextInput::make('nomor_telepon')
-                            ->autocapitalize('words')
-                            ->label('No telepon')
-                            ->required()
-                            ->placeholder('Masukkan no telepon'),
+                TextInput::make('email')
+                    ->label('Email')
+                    ->autocapitalize('none')
+                    ->required()
+                    ->placeholder('Masukkan email'),
 
-                         DatePicker::make('tgl_bergabung')
-                            ->label('Tanggal Bergabung')
-                            ->required(),
-                    ]),
-            ]);
+                TextInput::make('alamat_karyawan')
+                    ->label('Alamat Karyawan')
+                    ->autocapitalize('words')
+                    ->required()
+                    ->placeholder('Masukkan alamat karyawan'),
+
+                DatePicker::make('tgl_bergabung')
+                    ->label('Tanggal Bergabung')
+                    ->required(),
+
+                TextInput::make('nama_bank')
+                    ->label('Nama Bank')
+                    ->autocapitalize('words')
+                    ->required()
+                    ->placeholder('Masukkan nama bank'),
+
+                TextInput::make('no_rek')
+                    ->label('No Rekening')
+                    ->required()
+                    ->placeholder('Masukkan nomor rekening'),
+
+                TextInput::make('gaji_karyawan')
+                    ->label('Gaji Karyawan')
+                    ->numeric()
+                    ->required()
+                    ->placeholder('Masukkan gaji karyawan'),
+            ]),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('id_karyawan')
-                    ->label('Id karyawan')
-                    ->searchable(), // Menggunakan 'id' sebagai primary key
-
-                TextColumn::make('nama_karyawan'),
-                TextColumn::make('jabatan'),
-                TextColumn::make('alamat_karyawan'),
-                TextColumn::make('nomor_telepon'),
-                TextColumn::make('tgl_bergabung')
-                    ->iconcolor('warning')
-                    ->icon('heroicon-o-calendar-days')
-                    ->label('Tanggal Bergabung')
-                    ->sortable(),
-
+                TextColumn::make('id')->label('ID'),
+                TextColumn::make('no_ktp')->label('No KTP'),
+                TextColumn::make('nama_karyawan')->label('Nama'),
+                TextColumn::make('jabatan')->label('Jabatan'),
+                TextColumn::make('nomor_telepon')->label('Telepon'),
+                TextColumn::make('email')->label('Email'),
+                TextColumn::make('alamat_karyawan')->label('Alamat'),
+                TextColumn::make('tgl_bergabung')->label('Tanggal Bergabung'),
+                TextColumn::make('nama_bank')->label('Bank'),
+                TextColumn::make('no_rek')->label('Rekening'),
+                TextColumn::make('gaji_karyawan')
+                    ->label('Gaji')
+                    ->money('Rp.', true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -107,9 +115,7 @@ class KaryawanResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

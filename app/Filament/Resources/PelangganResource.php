@@ -12,15 +12,13 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn; // Corrected import
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Radio;
 
 class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    // tambahan untuk grooping
-    protected static ?string $navigationGroup = 'Masterdata';
 
     public static function form(Form $form): Form
     {
@@ -34,11 +32,13 @@ class PelangganResource extends Resource
                     TextInput::make('nama_pelanggan')
                         ->required()
                         ->placeholder('Masukkan nama pelanggan'),
-                    TextInput::make('jenis_kelamin')
-                        ->autocapitalize('words')
+                    Radio::make('jenis_kelamin')
                         ->label('Jenis Kelamin')
-                        ->required()
-                        ->placeholder('Masukkan Jenis Kelamin'),
+                        ->options([
+                            'Laki-laki' => 'Laki-laki',
+                            'Perempuan' => 'Perempuan',
+                        ])
+                        ->required(),
                     TextInput::make('no_telp')
                         ->required()
                         ->placeholder('Masukkan nomor telepon'),
@@ -67,7 +67,9 @@ class PelangganResource extends Resource
                
                     ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
