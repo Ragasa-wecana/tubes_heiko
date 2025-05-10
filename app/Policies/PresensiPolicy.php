@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Presensi;
 use App\Models\User;
-use App\Models\transaksipenjualan;
 use Illuminate\Auth\Access\Response;
 
-class transaksipenjualanPolicy
+class PresensiPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class transaksipenjualanPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, transaksipenjualan $transaksiPenjualan): bool
+    public function view(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -35,7 +35,7 @@ class transaksipenjualanPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, transaksipenjualan $transaksiPenjualan): bool
+    public function update(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -43,7 +43,7 @@ class transaksipenjualanPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, transaksipenjualan $transaksiPenjualan): bool
+    public function delete(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -51,7 +51,7 @@ class transaksipenjualanPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, transaksipenjualan $transaksiPenjualan): bool
+    public function restore(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -59,7 +59,7 @@ class transaksipenjualanPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, transaksipenjualan $transaksiPenjualan): bool
+    public function forceDelete(User $user, Presensi $presensi): bool
     {
         return true;
     }
