@@ -29,6 +29,9 @@ use App\Models\Barang;
 use App\Models\PembayaranBarang;
 use App\Models\PembelianBarang;
 use Illuminate\Support\Facades\DB;
+use Filament\Tables\Actions\Action as TableAction; // alias agar jelas
+use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+use Illuminate\Support\Facades\Storage;
 // untuk dapat menggunakan action
 use Filament\Forms\Components\Actions\Action;
 class PembelianResource extends Resource
@@ -216,7 +219,33 @@ class PembelianResource extends Resource
 
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Filter Status')
+                    ->options([
+                        'pesan' => 'Pemesanan',
+                        'bayar' => 'Pembayaran',
+                    ])
+                    ->searchable()
+                    ->preload(), // Menampilkan semua opsi saat filter diklik
+                    ])  
+                     // tombol tambahan
+            ->headerActions([
+                // tombol tambahan export pdf
+                // ✅ Tombol Unduh PDF
+                TableAction::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $pembelian = pembelian::all();
+
+                    $pdf = Pdf::loadView('pdf.pembelian', ['pembelian' => $pembelian]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'supplier-list.pdf'
+                    );
+                })
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

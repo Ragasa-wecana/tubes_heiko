@@ -47,3 +47,27 @@ Route::post('/prosesubahpassword', [App\Http\Controllers\AuthController::class, 
     ->middleware('customer')
 ;
 // prosesubahpassword
+// untuk contoh pdf
+use App\Http\Controllers\PDFController;
+Route::get('/contohpdf', [PDFController::class, 'contohpdf']);
+
+// contoh simpan users ke pdf
+Route::get('/downloadpdfuser', function () {
+    return 'Latihan PDF';
+})->name('downloadpdf.user');
+
+
+// contoh mengirim email
+// use Illuminate\Support\Facades\Mail; sudah ada di atas
+use App\Mail\TesMail;
+
+Route::get('/kirim-email', function () {
+    $nama = 'Bambang';
+
+    Mail::to('bams@gmail.com')->send(new TesMail($nama));
+
+    return 'Email berhasil dikirim ke Mailtrap!';
+});
+// proses pengiriman email
+use App\Http\Controllers\PengirimanEmailController;
+Route::get('/proses_kirim_email_pembayaran', [PengirimanEmailController::class, 'proses_kirim_email_pembayaran']);
