@@ -20,11 +20,20 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\Select;
 
+// tambahan untuk tombol unduh pdf
+    use Filament\Tables\Actions\Action;
+    use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+    use Illuminate\Support\Facades\Storage;
+
 class PresensiResource extends Resource
 {
     protected static ?string $model = Presensi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    // tambahan buat grup masterdata
+    protected static ?string $navigationGroup = 'Masterdata';
+
 
     public static function form(Form $form): Form
     {
@@ -83,6 +92,25 @@ class PresensiResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+            ])
+            // tombol tambahan
+            ->headerActions([
+                // tombol tambahan export pdf
+                // ✅ Tombol Unduh PDF
+                Action::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $presensi = Presensi::all();
+
+                    $pdf = Pdf::loadView('pdf.presensi', ['presensi' => $presensi]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'presensi-list.pdf'
+                    );
+                })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
