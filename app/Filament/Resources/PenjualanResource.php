@@ -31,6 +31,11 @@ use App\Models\Pembeli;
 use App\Models\Barang;
 use App\Models\Pembayaran;
 use App\Models\PenjualanBarang;
+// tambahan untuk tombol unduh pdf
+// use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\Action as TableAction; // alias agar jelas
+use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+use Illuminate\Support\Facades\Storage;
 
 // DB
 use Illuminate\Support\Facades\DB;
@@ -255,6 +260,26 @@ class PenjualanResource extends Resource
                     ])
                     ->searchable()
                     ->preload(), // Menampilkan semua opsi saat filter diklik
+                    ])  
+                     // tombol tambahan
+            ->headerActions([
+                // tombol tambahan export pdf
+                // ✅ Tombol Unduh PDF
+                TableAction::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $penjualan = Penjualan::all();
+
+                    $pdf = Pdf::loadView('pdf.penjualan', ['penjualan' => $penjualan]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'pelanggan-list.pdf'
+                    );
+                })
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
