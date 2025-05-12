@@ -44,6 +44,8 @@ class ListSupplierResource extends Resource
                         if ($state) {
                             $supplier = Supplier::find($state);
                             $set('nama_supplier', $supplier->nama_supplier);
+                            $set('alamat', $supplier->alamat);
+                            $set('telepon', $supplier->no_telepon);
                         }
                     })
                 ,
@@ -61,14 +63,11 @@ class ListSupplierResource extends Resource
                 ,
                 TextInput::make('alamat')
                     ->required()
-                    ->placeholder('Masukkan alamat supplier') // Placeholder untuk membantu pengguna
-                ,
+                    ->readonly(),
+
                 TextInput::make('telepon')
                     ->required()
-                    ->placeholder('Masukkan nomor telepon') // Placeholder untuk membantu pengguna
-                    ->numeric() // Validasi agar hanya angka yang diizinkan
-                    ->prefix('+62') // Contoh: Menambahkan prefix jika diperlukan
-                    ->extraAttributes(['pattern' => '^[0-9]+$', 'title' => 'Masukkan angka yang diawali dengan 0']) // Validasi dengan pattern regex
+                    ->readonly() // Validasi dengan pattern regex
                 ,
             ]);
     }
