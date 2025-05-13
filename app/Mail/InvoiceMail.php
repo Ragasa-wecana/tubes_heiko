@@ -40,7 +40,7 @@ class InvoiceMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invoice Pembayaran Toko Mukena',
+            subject: 'Invoice Pembayaran Toko Heiko',
         );
     }
 
@@ -66,8 +66,8 @@ class InvoiceMail extends Mailable
     {
         return [
             // tambahkan pemrosesan attachment
-            Attachment::fromData(fn () => $this->pdfContent, 'invoice.pdf')
-            ->withMime('application/pdf'),
+            Attachment::fromData(fn() => $this->pdfContent, 'invoice.pdf')
+                ->withMime('application/pdf'),
         ];
     }
 }

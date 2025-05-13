@@ -42,35 +42,35 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                
-                    TextInput::make('name')
-                        ->required()
-                        ->maxLength(100),
-                    TextInput::make('email')
-                        ->email()
-                        ->label('Email address')
-                        ->required()
-                        ->maxLength(100),    
-                    TextInput::make('password')
-                        ->password()
-                        // ->required(fn (Forms\Form $form): bool => $form->getLivewire() instanceof Pages\CreateUser)
-                        ->minLength(8)
-                        ->same('password_confirmation')
-                        ->dehydrated(fn ($state) => filled($state))
-                        ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
-                    TextInput::make('password_confirmation')
-                        ->password()
-                        ->label('Password Confirmation')
-                        // ->required(fn (Forms\Form $form): bool => $form->getLivewire() instanceof Pages\CreateUser) // ✅ Perbaikan
-                        ->minLength(8)
-                        ->minlength(8)
-                        ->dehydrated(false),
-                    Select::make('user_group')
-                        ->options([
-                            'admin' => 'admin',
-                            'customer' => 'customer',
-                        ])
-                        ->default('customer'),
+
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(100),
+                TextInput::make('email')
+                    ->email()
+                    ->label('Email address')
+                    ->required()
+                    ->maxLength(100),
+                TextInput::make('password')
+                    ->password()
+                    // ->required(fn (Forms\Form $form): bool => $form->getLivewire() instanceof Pages\CreateUser)
+                    ->minLength(8)
+                    ->same('password_confirmation')
+                    ->dehydrated(fn($state) => filled($state))
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state)),
+                TextInput::make('password_confirmation')
+                    ->password()
+                    ->label('Password Confirmation')
+                    // ->required(fn (Forms\Form $form): bool => $form->getLivewire() instanceof Pages\CreateUser) // ✅ Perbaikan
+                    ->minLength(8)
+                    ->minlength(8)
+                    ->dehydrated(false),
+                Select::make('user_group')
+                    ->options([
+                        'admin' => 'admin',
+                        'customer' => 'customer',
+                    ])
+                    ->default('customer'),
             ]);
     }
 
@@ -81,7 +81,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 BadgeColumn::make('user_group')
-                    ->color(fn ($state) => match ($state) {
+                    ->color(fn($state) => match ($state) {
                         'admin' => 'warning',
                         'customer' => 'success',
                         default => 'success',
@@ -103,19 +103,19 @@ class UserResource extends Resource
                 // tombol tambahan export pdf
                 // ✅ Tombol Unduh PDF
                 Action::make('downloadPdf')
-                ->label('Unduh PDF')
-                ->icon('heroicon-o-document-arrow-down')
-                ->color('success')
-                ->action(function () {
-                    $users = User::all();
+                    ->label('Unduh PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->action(function () {
+                        $users = User::all();
 
-                    $pdf = Pdf::loadView('pdf.users', ['users' => $users]);
+                        $pdf = Pdf::loadView('pdf.users', ['users' => $users]);
 
-                    return response()->streamDownload(
-                        fn () => print($pdf->output()),
-                        'user-list.pdf'
-                    );
-                })
+                        return response()->streamDownload(
+                            fn() => print($pdf->output()),
+                            'user-list.pdf'
+                        );
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
