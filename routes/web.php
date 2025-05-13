@@ -22,14 +22,15 @@ Route::get('/', function () {
 
 // login customer
 Route::get('/depan', [App\Http\Controllers\KeranjangController::class, 'daftarbarang'])
-     ->middleware('customer')
-     ->name('depan');
+    ->middleware('customer')
+    ->name('depan');
 Route::get('/login', function () {
     return view('login');
 });
 
 // tambahan route untuk proses login
 use Illuminate\Http\Request;
+
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 
 Route::get('/logout', function () {
@@ -49,6 +50,7 @@ Route::post('/prosesubahpassword', [App\Http\Controllers\AuthController::class, 
 // prosesubahpassword
 // untuk contoh pdf
 use App\Http\Controllers\PDFController;
+
 Route::get('/contohpdf', [PDFController::class, 'contohpdf']);
 
 // contoh simpan users ke pdf
@@ -70,4 +72,22 @@ Route::get('/kirim-email', function () {
 });
 // proses pengiriman email
 use App\Http\Controllers\PengirimanEmailController;
+
 Route::get('/proses_kirim_email_pembayaran', [PengirimanEmailController::class, 'proses_kirim_email_pembayaran']);
+
+// contoh sampel midtrans
+use App\Http\Controllers\CobaMidtransController;
+
+Route::get('/cekmidtrans', [CobaMidtransController::class, 'cekmidtrans']);
+
+// tambah keranjang
+Route::post('/tambah', [App\Http\Controllers\KeranjangController::class, 'tambahKeranjang'])->middleware('customer');
+Route::get('/lihatkeranjang', [App\Http\Controllers\KeranjangController::class, 'lihatkeranjang'])->middleware('customer');
+Route::delete('/hapus/{barang_id}', [App\Http\Controllers\KeranjangController::class, 'hapus'])->middleware('customer');
+Route::get('/lihatriwayat', [App\Http\Controllers\KeranjangController::class, 'lihatriwayat'])->middleware('customer');
+// untuk autorefresh
+Route::get('/cek_status_pembayaran_pg', [App\Http\Controllers\KeranjangController::class, 'cek_status_pembayaran_pg']);
+Route::get('/login', function () {
+    return view('login');
+});
+
