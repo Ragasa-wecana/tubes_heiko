@@ -243,7 +243,7 @@ class PembelianResource extends Resource
 
                     return response()->streamDownload(
                         fn () => print($pdf->output()),
-                        'supplier-list.pdf'
+                        'pembelian-list.pdf'
                     );
                 })
             ])

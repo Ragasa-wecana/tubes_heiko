@@ -274,7 +274,7 @@ class PenjualanResource extends Resource
 
                         return response()->streamDownload(
                             fn() => print($pdf->output()),
-                            'pelanggan-list.pdf'
+                            'penjualan-list.pdf'
                         );
                     })
             ])
