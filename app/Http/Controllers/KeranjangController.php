@@ -18,13 +18,13 @@ class KeranjangController extends Controller
     public function daftarbarang()
     {
         // ambil session
-        $id_user = Auth::user()->id;
+        $user_id = Auth::user()->id;
 
-        // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-        $pembeli = Pembeli::where('user_id', $id_user)
+        // dapatkan pembeli_id$pembeli_id dari user_id di tabel users sesuai data yang login
+        $pembeli = Pembeli::where('user_id', $user_id)
             ->select(DB::raw('id'))
             ->first();
-        $id_pembeli = $pembeli->id;
+        $pembeli_id = $pembeli->id;
 
         // ambil data barang
         $barang = Barang::all();
@@ -34,7 +34,7 @@ class KeranjangController extends Controller
             ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('COUNT(DISTINCT barang_id) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -48,7 +48,7 @@ class KeranjangController extends Controller
             ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('SUM(harga_jual * jml) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -79,13 +79,13 @@ class KeranjangController extends Controller
                 'quantity' => 'required|integer|min:1'
             ]);
 
-            $id_user = Auth::user()->id;
+            $user_id = Auth::user()->id;
 
-            // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-            $pembeli = Pembeli::where('user_id', $id_user)
+            // dapatkan pembeli_id$pembeli_id dari user_id di tabel users sesuai data yang login
+            $pembeli = Pembeli::where('user_id', $user_id)
                 ->select(DB::raw('id'))
                 ->first();
-            $id_pembeli = $pembeli->id;
+            $pembeli_id = $pembeli->id;
 
             // cek di database apakah ada nomor faktur yang masih aktif
             // dilihat dari pembayaran yg masih 0
@@ -103,7 +103,7 @@ class KeranjangController extends Controller
                 $penjualanExist = DB::table('penjualan')
                     ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
                     ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
-                    ->where('penjualan.pembeli_id', $id_pembeli)
+                    ->where('penjualan.pembeli_id', $pembeli_id)
                     ->where(function ($query) {
                         $query->where('pembayaran.gross_amount', 0)
                             ->orWhere(function ($q) {
@@ -119,7 +119,7 @@ class KeranjangController extends Controller
                     $penjualan = Penjualan::create([
                         'no_faktur'   => Penjualan::getKodeFaktur(),
                         'tgl'         => now(),
-                        'pembeli_id'  => $id_pembeli,
+                        'pembeli_id'  => $pembeli_id,
                         'tagihan'     => 0,
                         'status'      => 'pesan',
                     ]);
@@ -152,7 +152,7 @@ class KeranjangController extends Controller
                     ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
                     ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
                     ->select(DB::raw('SUM(harga_jual * jml) as total'))
-                    ->where('penjualan.pembeli_id', '=', $id_pembeli)
+                    ->where('penjualan.pembeli_id', '=', $pembeli_id)
                     ->where(function ($query) {
                         $query->where('pembayaran.gross_amount', 0)
                             ->orWhere(function ($q) {
@@ -173,7 +173,7 @@ class KeranjangController extends Controller
                     ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
                     ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
                     ->select(DB::raw('COUNT(DISTINCT barang_id) as total'))
-                    ->where('penjualan.pembeli_id', '=', $id_pembeli)
+                    ->where('penjualan.pembeli_id', '=', $pembeli_id)
                     ->where(function ($query) {
                         $query->where('pembayaran.gross_amount', 0)
                             ->orWhere(function ($q) {
@@ -206,14 +206,14 @@ class KeranjangController extends Controller
     public function lihatkeranjang()
     {
         date_default_timezone_set('Asia/Jakarta');
-        $id_user = Auth::user()->id;
+        $user_id = Auth::user()->id;
 
-        // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-        $pembeli = Pembeli::where('user_id', $id_user)
+        // dapatkan pembeli_id$pembeli_id dari user_id di tabel users sesuai data yang login
+        $pembeli = Pembeli::where('user_id', $user_id)
             ->select(DB::raw('id'))
             ->first();
-        $id_pembeli = $pembeli->id;
-        // dd(var_dump($id_pembeli));
+        $pembeli_id = $pembeli->id;
+        // dd(var_dump($pembeli_id));
 
         $barang = DB::table('penjualan')
             ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
@@ -232,7 +232,7 @@ class KeranjangController extends Controller
                 DB::raw('SUM(penjualan_barang.jml) as total_barang'),
                 DB::raw('SUM(penjualan_barang.harga_jual * penjualan_barang.jml) as total_belanja')
             )
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -371,7 +371,7 @@ class KeranjangController extends Controller
                 $tagihan = DB::table('penjualan')
                     ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
                     ->select(DB::raw('transaction_id'))
-                    ->where('penjualan.pembeli_id', '=', $id_pembeli)
+                    ->where('penjualan.pembeli_id', '=', $pembeli_id)
                     ->where(function ($query) {
                         $query->where('pembayaran.gross_amount', 0)
                             ->orWhere(function ($q) {
@@ -397,7 +397,7 @@ class KeranjangController extends Controller
                         DB::raw('SUM(penjualan_barang.jml) as total_barang'),
                         DB::raw('SUM(penjualan_barang.harga_jual * penjualan_barang.jml) as total_belanja')
                     )
-                    ->where('penjualan.pembeli_id', '=', $id_pembeli)
+                    ->where('penjualan.pembeli_id', '=', $pembeli_id)
                     ->where(function ($query) {
                         $query->where('pembayaran.gross_amount', 0)
                             ->orWhere(function ($q) {
@@ -509,22 +509,34 @@ class KeranjangController extends Controller
     public function hapus($barang_id)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $id_user = Auth::user()->id;
+        $user_id = Auth::user()->id;
 
-        // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-        $pembeli = Pembeli::where('user_id', $id_user)
+        // dapatkan pembeli_id$pembeli_id dari user_id di tabel users sesuai data yang login
+        $pembeli = Pembeli::where('user_id', $user_id)
             ->select(DB::raw('id'))
             ->first();
-        $id_pembeli = $pembeli->id;
+        $pembeli_id = $pembeli->id;
 
 
-        $sql = "DELETE FROM penjualan_barang WHERE barang_id = ? AND penjualan_id = (SELECT penjualan.id FROM penjualan join pembayaran on (penjualan.id=pembayaran.penjualan_id) WHERE penjualan.pembeli_id = ? AND ((pembayaran.gross_amount = 0) or (pembayaran.jenis_pembayaran='pg' and pembayaran.status_code<>'200')))";
-        $deleted = DB::delete($sql, [$barang_id, $id_pembeli]);
+        $sql = "DELETE FROM penjualan_barang 
+        WHERE barang_id = ? 
+        AND penjualan_id IN (
+            SELECT penjualan.id 
+            FROM penjualan 
+            JOIN pembayaran ON penjualan.id = pembayaran.penjualan_id 
+            WHERE penjualan.pembeli_id = ? 
+            AND (
+                pembayaran.gross_amount = 0 
+                OR (pembayaran.jenis_pembayaran = 'pg' AND pembayaran.status_code <> '200')
+            )
+        )";
+
+        $deleted = DB::delete($sql, [$barang_id, $pembeli_id]);
 
         $penjualan = DB::table('penjualan')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select('penjualan.id')
-            ->where('penjualan.pembeli_id', $id_pembeli)
+            ->where('penjualan.pembeli_id', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -539,7 +551,7 @@ class KeranjangController extends Controller
             ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('SUM(harga_jual * jml) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -562,7 +574,7 @@ class KeranjangController extends Controller
             ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('COUNT(DISTINCT barang_id) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -573,7 +585,7 @@ class KeranjangController extends Controller
             ->get();
 
 
-        return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus', 'total' => $tagihan->total, 'jmlbarangdibeli' => $jmlbarangdibeli[0]->total ?? 0]);
+        // return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus', 'total' => $tagihan->total, 'jmlbarangdibeli' => $jmlbarangdibeli[0]->total ?? 0]);
     }
 
     // untuk autorefresh dari server midtrans yang sudah terbayarkan akan diupdatekan ke database
@@ -706,13 +718,13 @@ class KeranjangController extends Controller
     public function lihatriwayat()
     {
         date_default_timezone_set('Asia/Jakarta');
-        $id_user = Auth::user()->id;
+        $user_id = Auth::user()->id;
 
-        // dapatkan id_pembeli dari user_id di tabel users sesuai data yang login
-        $pembeli = Pembeli::where('user_id', $id_user)
+        // dapatkan pembeli_id$pembeli_id dari user_id di tabel users sesuai data yang login
+        $pembeli = Pembeli::where('user_id', $user_id)
             ->select(DB::raw('id'))
             ->first();
-        $id_pembeli = $pembeli->id;
+        $pembeli_id = $pembeli->id;
 
         // dd(var_dump($barangdibeli));
         // jumlah barang dibeli
@@ -721,7 +733,7 @@ class KeranjangController extends Controller
             ->join('pembeli', 'penjualan.pembeli_id', '=', 'pembeli.id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('COUNT(DISTINCT barang_id) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -735,7 +747,7 @@ class KeranjangController extends Controller
             ->join('penjualan_barang', 'penjualan.id', '=', 'penjualan_barang.penjualan_id')
             ->join('pembayaran', 'penjualan.id', '=', 'pembayaran.penjualan_id')
             ->select(DB::raw('SUM(harga_jual * jml) as total'))
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -761,7 +773,7 @@ class KeranjangController extends Controller
                 DB::raw('SUM(penjualan_barang.jml) as total_barang'),
                 DB::raw('SUM(penjualan_barang.harga_jual * penjualan_barang.jml) as total_belanja')
             )
-            ->where('penjualan.pembeli_id', '=', $id_pembeli)
+            ->where('penjualan.pembeli_id', '=', $pembeli_id)
             ->where(function ($query) {
                 $query->where('pembayaran.gross_amount', 0)
                     ->orWhere(function ($q) {
@@ -795,7 +807,7 @@ class KeranjangController extends Controller
         $transaksi = DB::select("
                               SELECT * FROM penjualan
                               WHERE pembeli_id = ?
-                    ", [$id_pembeli]);
+                    ", [$pembeli_id]);
 
         // Ambil semua id penjualan
         $penjualan_ids = array_column($transaksi, 'id');
