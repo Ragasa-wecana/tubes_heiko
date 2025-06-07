@@ -183,7 +183,7 @@
                       <h3>{{$p->nama_barang}}</h3>
                       <span class="qty">Jumlah Pembelian: {{ $p->total_barang }} Unit</span><br>
                       <span class="qty"><b>Total : {{rupiah($p->total_belanja)}}</b></span> <br>
-                      <button class="w-100 btn btn-danger btn-sm" type="submit" onclick="hapus({{ $p->barang_id }})">Hapus</button>
+                      <button class="w-100 btn btn-danger btn-sm" type="button" onclick="hapusBarang({{ $p->barang_id }})">Hapus</button>
                     </div>
                   </div>
                   @endforeach
@@ -260,57 +260,79 @@
 
   <!-- untuk sintak hapus data -->
   <script>
-    function hapus(barang_id) {
-      // console.log(productId);
-      fetch('/hapus/' + barang_id, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // alert("Produk berhasil dihapus!");
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil!',
-              text: 'Produk berhasil dihapus dari keranjang!',
-              showConfirmButton: false,
-              timer: 2000 // Popup otomatis hilang setelah 2 detik
-            });
+    // Check if SweetAlert is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make sure SweetAlert is available globally
+      if (typeof Swal === 'undefined') {
+        // Load SweetAlert if not available
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+        document.head.appendChild(script);
+      }
+    });
 
-            // let vtotal = new Intl.NumberFormat("en-IN").format(data.total);
-            let formatter = new Intl.NumberFormat('id-ID', {
-              style: 'currency',
-              currency: 'IDR',
-              minimumFractionDigits: 0
-            });
-            let vtotal = formatter.format(data.total);
-            document.getElementById('cart-total').textContent = "Total: " + vtotal;
-            document.getElementById('total_belanja').textContent = vtotal;
-            // jmlbarangdibeli
-            document.getElementById('cart-count').textContent = data.jmlbarangdibeli;
-
-            location.reload(); // Refresh tampilan
-          } else {
-            // alert("Gagal menghapus produk.");
-            console.log(data);
-            // Swal.fire({
-            //   icon: 'error',
-            //   title: 'Oops...',
-            //   text: 'Gagal menghapus produk dari keranjang!'
-            // });
+    function hapusBarang(barang_id) {
+      // Show confirmation dialog
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          title: 'Konfirmasi',
+          text: 'Apakah Anda yakin ingin menghapus barang ini dari keranjang?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, Hapus!',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            performDelete(barang_id);
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Terjadi Kesalahan',
-            text: error.message || 'Terjadi kesalahan saat menghapus produk.',
-          });
         });
+      } else {
+        if (confirm('Apakah Anda yakin ingin menghapus barang ini dari keranjang?')) {
+          performDelete(barang_id);
+        }
+      }
+    }
+
+    function performDelete(barang_id) {
+      // Get CSRF token
+      const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      // Create a form to submit the DELETE request
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/hapus/' + barang_id;
+      form.style.display = 'none';
+
+      // Add CSRF token
+      const csrfField = document.createElement('input');
+      csrfField.type = 'hidden';
+      csrfField.name = '_token';
+      csrfField.value = token;
+      form.appendChild(csrfField);
+
+      // Add method field for Laravel to recognize as DELETE
+      const methodField = document.createElement('input');
+      methodField.type = 'hidden';
+      methodField.name = '_method';
+      methodField.value = 'DELETE';
+      form.appendChild(methodField);
+
+      // Add the form to the document and submit it
+      document.body.appendChild(form);
+
+      // Show processing message
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          title: 'Sedang Diproses',
+          text: 'Menghapus barang dari keranjang...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+      }
+
+      form.submit();
     }
   </script>
 

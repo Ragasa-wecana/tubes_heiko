@@ -158,7 +158,7 @@ class PenjualanResource extends Resource
                             ,
 
                             //tambahan form simpan sementara
-                            // **Tombol Simpan Sementara**
+                            // *Tombol Simpan Sementara*
                             Forms\Components\Actions::make([
                                 Forms\Components\Actions\Action::make('Simpan Sementara')
                                     ->action(function ($get) {

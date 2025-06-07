@@ -13,16 +13,10 @@ return new class extends Migration
     {
         Schema::create('karyawan', function (Blueprint $table) {
             $table->id();
-            $table->string('no_ktp');
             $table->string('nama_karyawan');
             $table->string('jabatan');
             $table->string('nomor_telepon', 15);
-            $table->string('email');
             $table->text('alamat_karyawan');
-            $table->date('tgl_bergabung');
-            $table->string('nama_bank');
-            $table->string('no_rek');
-            $table->unsignedBigInteger('gaji_karyawan');
             $table->timestamps();
         });
     }

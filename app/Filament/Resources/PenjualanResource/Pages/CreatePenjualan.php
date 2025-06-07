@@ -32,7 +32,7 @@ class CreatePenjualan extends CreateRecord
             Actions\Action::make('bayar')
                 ->label('Bayar')
                 ->color('success')
-                ->action(fn () => $this->simpanPembayaran())
+                ->action(fn() => $this->simpanPembayaran())
                 ->requiresConfirmation()
                 ->modalHeading('Konfirmasi Pembayaran')
                 ->modalDescription('Apakah Anda yakin ingin menyimpan pembayaran ini?')
