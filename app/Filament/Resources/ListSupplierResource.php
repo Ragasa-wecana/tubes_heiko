@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\ListSupplierExporter;
 use App\Filament\Resources\ListSupplierResource\Pages;
 use App\Filament\Resources\ListSupplierResource\RelationManagers;
 use App\Models\ListSupplier;
@@ -16,6 +17,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Select;
 use App\Models\Supplier;
+use Filament\Tables\Actions\Action as TableAction; // alias agar jelas
+use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+use Illuminate\Support\Facades\Storage;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
+use App\Filament\Exports\UserExporter;
+
 
 
 class ListSupplierResource extends Resource
@@ -44,6 +52,8 @@ class ListSupplierResource extends Resource
                         if ($state) {
                             $supplier = Supplier::find($state);
                             $set('nama_supplier', $supplier->nama_supplier);
+                            $set('alamat', $supplier->alamat);
+                            $set('telepon', $supplier->no_telepon);
                         }
                     })
                 ,
@@ -61,14 +71,11 @@ class ListSupplierResource extends Resource
                 ,
                 TextInput::make('alamat')
                     ->required()
-                    ->placeholder('Masukkan alamat supplier') // Placeholder untuk membantu pengguna
-                ,
+                    ->readonly(),
+
                 TextInput::make('telepon')
                     ->required()
-                    ->placeholder('Masukkan nomor telepon') // Placeholder untuk membantu pengguna
-                    ->numeric() // Validasi agar hanya angka yang diizinkan
-                    ->prefix('+62') // Contoh: Menambahkan prefix jika diperlukan
-                    ->extraAttributes(['pattern' => '^[0-9]+$', 'title' => 'Masukkan angka yang diawali dengan 0']) // Validasi dengan pattern regex
+                    ->readonly() // Validasi dengan pattern regex
                 ,
             ]);
     }
@@ -90,12 +97,35 @@ class ListSupplierResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
+            ->headerActions([
+                // tombol tambahan export csv dan excel
+                ExportAction::make()->exporter(ListSupplierExporter::class)->color('success'),
+                // tombol tambahan export pdf
+                // ✅ Tombol Unduh PDF
+                TableAction::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $listsupplier = ListSupplier::all();
+
+                    $pdf = Pdf::loadView('pdf.ListSupplier', ['list_supplier' => $listsupplier]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'list-supplier.pdf'
+                    );
+                })
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                
             ]);
+            
     }
+    
 
     public static function getRelations(): array
     {
