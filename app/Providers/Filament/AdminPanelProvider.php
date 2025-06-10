@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 // tamnbahan
+// use App\Filament\Widgets\BarangChart;
 
-use App\Filament\Widgets\BarangChart;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,11 +37,11 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login() 
             ->databaseNotifications()
             // ->login(function (Request $request) {
             //     $credentials = $request->only('email', 'password');
-
+            
             //     if (Auth::guard('admin')->attempt($credentials)) {
             //         $user = Auth::guard('admin')->user();
             //         if ($user->user_group === 'admin') {
@@ -51,20 +51,26 @@ class AdminPanelProvider extends PanelProvider
             //             return back()->withErrors(['email' => 'Anda tidak memiliki akses ke panel admin.']);
             //         }
             //     }
-
+            
             //     return back()->withErrors(['email' => 'Email atau password salah.']);
             // })
-
+            
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                // Pages\Dashboard::class,
+                \Filament\Pages\Dashboard::class, // ✅ Dashboard default bawaan Filament
             ])
-            
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->widgets([
+                \App\Filament\Widgets\DashboardStatCards::class,
+                \App\Filament\Widgets\TotalPenjualanChart::class,
+                \App\Filament\Widgets\PenjualanPerBulanChart::class,
+                \App\Filament\Widgets\PenjualanPerPembeliChart::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

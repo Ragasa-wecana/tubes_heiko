@@ -11,7 +11,6 @@ use App\Models\Penjualan;
 use App\Models\Coa;
 use App\Models\Pembeli;
 
-
 use Illuminate\Support\Number;
 
 class DashboardStatCards extends BaseWidget
@@ -86,7 +85,7 @@ class DashboardStatCards extends BaseWidget
     protected function getCards(): array
     {
         return [
-            // Card::make('Total Transaksi', Penjualan2::count())
+            // Card::make('Total Transaksi', Penjualan::count())
             //     ->description('Jumlah transaksi yang tercatat')
             //     // ->color('primary')
             // ,
