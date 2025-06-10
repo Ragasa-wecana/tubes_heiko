@@ -18,6 +18,16 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+// tambahan untuk is admin
+use App\Http\Middleware\AdminOnly;
+
+// tambahan
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+// tamnbahan
+// use App\Filament\Widgets\BarangChart;
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -35,10 +45,14 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            //->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                \App\Filament\Widgets\DashboardStatCards::class,
+                \App\Filament\Widgets\TotalPenjualanChart::class,
+                \App\Filament\Widgets\PenjualanPerBulanChart::class,
+                \App\Filament\Widgets\PenjualanPerBarangChart::class,
+                \App\Filament\Widgets\PieChartPenjualan::class,
+
             ])
             ->middleware([
                 EncryptCookies::class,
