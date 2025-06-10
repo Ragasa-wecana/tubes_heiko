@@ -26,12 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 // tamnbahan
-<<<<<<< HEAD
 // use App\Filament\Widgets\BarangChart;
-=======
-use App\Filament\Widgets\BarangChart;
-
->>>>>>> 13e3c2132bbc18b8c9a8518d95e2b5ce74b13592
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -68,7 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-<<<<<<< HEAD
             //->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 \App\Filament\Widgets\DashboardStatCards::class,
@@ -78,8 +72,6 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\PieChartPenjualan::class,
 
             ])
-=======
->>>>>>> 13e3c2132bbc18b8c9a8518d95e2b5ce74b13592
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
