@@ -4,54 +4,43 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-// untuk tambahan db
 use Illuminate\Support\Facades\DB;
 
 class Karyawan extends Model
 {
     use HasFactory;
 
-    protected $table = 'Karyawan'; // Nama tabel eksplisit
+    protected $table = 'karyawan'; // Gunakan lowercase agar konsisten dengan standar Laravel
 
     protected $guarded = [];
 
     public static function getKodeFaktur()
     {
-        // query kode karyawan
-        $sql = "SELECT IFNULL(MAX(id_karyawan), 'k-001') as id_karyawan 
-                FROM karyawan ";
-        $kodefaktur = DB::select($sql);
+        // Ambil ID karyawan terakhir (maksimal)
+        $sql = "SELECT MAX(id_karyawan) as id_karyawan FROM karyawan";
+        $kodeFaktur = DB::select($sql);
 
-        // cacah hasilnya
-        foreach ($kodeKaryawan as $kdkrw) {
-            $kd = $kdkrw->id_karyawan;
-;
-        }
-        // Mengambil substring tiga digit akhir dari string PR-000
-        $noawal = substr($kd,-7);
-        $noakhir = $noawal+1; //menambahkan 1, hasilnya adalah integer cth 1
-        $noakhir = 'K-'.str_pad($noakhir,7,"0",STR_PAD_LEFT); //menyambung dengan string P-00001
-        return $noakhir;
+        $kd = $kodeFaktur[0]->id_karyawan ?? 'K-0000000';
 
+        // Ambil angka dari id_karyawan (angka setelah K-)
+        $noAwal = (int)substr($kd, 2); // misal 'K-0000005' → 5
+        $noAkhir = $noAwal + 1;
+
+        // Format ulang ke format 'K-0000001'
+        $kodeBaru = 'K-' . str_pad($noAkhir, 7, "0", STR_PAD_LEFT);
+
+        return $kodeBaru;
     }
 
-    // relasi ke tabel karyawan
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class, 'id_karyawan');
-    }
-
-    // relasi ke tabel presensi
+    // Relasi ke presensi
     public function presensi()
     {
-        return $this->hasMany(presensi::class, 'presensi_id');
+        return $this->hasMany(Presensi::class, 'karyawan_id');
     }
 
-    // relasi ke tabel penggajian
+    // Relasi ke penggajian
     public function penggajian()
     {
-        return $this->hasMany(penggajian::class, 'penggajian_id');
+        return $this->hasMany(Penggajian::class, 'karyawan_id');
     }
 }
-    //
