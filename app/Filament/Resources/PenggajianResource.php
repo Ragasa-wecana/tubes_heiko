@@ -3,70 +3,61 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PenggajianResource\Pages;
-use App\Filament\Resources\PenggajianResource\RelationManagers;
 use App\Models\Penggajian;
+use App\Models\Karyawan;
+use App\Models\Presensi;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Presensi;
-
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Actions\EditAction;  // Correct import
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
 
 class PenggajianResource extends Resource
 {
     protected static ?string $model = Penggajian::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    // tambahan buat grup masterdata
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?string $navigationGroup = 'Transaksi';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                 Select::make('nama_karyawan')
+                Select::make('id_karyawan')
                     ->label('Nama Karyawan')
-                    ->options(Presensi::pluck('nama_karyawan')->toArray()) // Mengambil data dari tabel
+                    ->options(Karyawan::pluck('nama_karyawan', 'id'))
+                    ->searchable()
                     ->required()
-                    ->placeholder('Pilih Nama'),
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, $set) {
+                        $karyawan = Karyawan::find($state);
+                        if ($karyawan) {
+                            $set('jabatan', $karyawan->jabatan);
+                        }
+                    }),
 
-            
                 TextInput::make('jabatan')
-                    ->label('Jabatan Karyawan')
-                    ->autocapitalize('words')
-                    ->required()
-                    ->placeholder('Masukkan jabatan karyawan'),
-                
+                    ->label('Jabatan')
+                    ->disabled()
+                    ->dehydrated(), // atau hapus saja karena default-nya true
+
+
                 TextInput::make('gaji_pokok')
                     ->label('Gaji Pokok')
-                    ->autocapitalize('words')
-                    ->required()
-                    ->placeholder('Masukkan gaji pokok'),
-                
+                    ->numeric()
+                    ->required(),
+
                 TextInput::make('potongan_gaji')
-                    ->label('Potongan Gaji')
-                    ->autocapitalize('words')
-                    ->required()
-                    ->placeholder('Masukkan potongan gaji'),
-                
-                TextInput::make('total_gaji')
-                    ->label('Total Gaji')
-                    ->autocapitalize('words')
-                    ->required()
-                    ->placeholder('Masukkan total gaji'),
-                
+                    ->label('Potongan')
+                    ->numeric()
+                    ->required(),
+
                 DatePicker::make('tanggal_pembayaran')
-                    ->label('tanggal')
+                    ->label('Tanggal Pembayaran')
                     ->required(),
             ]);
     }
@@ -75,33 +66,21 @@ class PenggajianResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_karyawan')->searchable(),
-                Tables\Columns\TextColumn::make('nama_karyawan')->searchable(),
-                Tables\Columns\TextColumn::make('jabatan')->searchable(),
-                Tables\Columns\TextColumn::make('gaji_pokok')->searchable(),
-                Tables\Columns\TextColumn::make('potongan_gaji')->searchable(),
-                Tables\Columns\TextColumn::make('total_gaji')->searchable(),
-                Tables\Columns\TextColumn::make('gaji_pokok')->searchable(),
-                Tables\Columns\TextColumn::make('tanggal_pembayaran')->searchable(),
-            ])
-            ->filters([
-                //
+                TextColumn::make('karyawan.nama')->label('Nama'),
+                TextColumn::make('jabatan'),
+                TextColumn::make('gaji_pokok')->money('IDR'),
+                TextColumn::make('potongan')->money('IDR'),
+                TextColumn::make('total_gaji')->label('Total Gaji')->money('IDR'),
+                TextColumn::make('bulan'),
+                TextColumn::make('tahun'),
+                TextColumn::make('tanggal_pembayaran')->date(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),  // Correct usage
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

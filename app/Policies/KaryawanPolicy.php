@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Karyawan;
+use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class KaryawanPolicy
@@ -64,5 +64,3 @@ class KaryawanPolicy
         return true;
     }
 }
-
-

@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PresensiResource\Pages;
 use App\Filament\Resources\PresensiResource\RelationManagers;
 use App\Models\Presensi;
-use App\Models\Karyawan;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -41,11 +40,14 @@ class PresensiResource extends Resource
         return $form
             ->schema([
                 Select::make('id_karyawan')
-                    ->label('Id Karyawan')
-                    ->options(Karyawan::pluck('nama_karyawan', 'id_karyawan')->toArray()) // Ambil dari model Karyawan
-                    ->required()
-                    ->placeholder('Pilih id Karyawan'),
-
+                    ->options([
+                    'K-001' => 'K-001',
+                    'K-002' => 'K-002',
+                    'K-003' => 'K-003',
+                    'K-004' => 'K-004',
+                    'K-005' => 'K-005',
+                ])
+                ->default('id_karyawan'),
             
                 Select::make('nama_karyawan')
                     ->options([

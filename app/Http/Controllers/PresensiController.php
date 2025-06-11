@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\presensi;
-use App\Http\Requests\StorepresensiRequest;
-use App\Http\Requests\UpdatepresensiRequest;
+use App\Models\Presensi;
+use App\Http\Requests\StorePresensiRequest;
+use App\Http\Requests\UpdatePresensiRequest;
 
 class PresensiController extends Controller
 {
@@ -27,7 +27,7 @@ class PresensiController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorepresensiRequest $request)
+    public function store(StorePresensiRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class PresensiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(presensi $presensi)
+    public function show(Presensi $presensi)
     {
         //
     }
@@ -43,7 +43,7 @@ class PresensiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(presensi $presensi)
+    public function edit(Presensi $presensi)
     {
         //
     }
@@ -51,7 +51,7 @@ class PresensiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatepresensiRequest $request, presensi $presensi)
+    public function update(UpdatePresensiRequest $request, Presensi $presensi)
     {
         //
     }
@@ -59,7 +59,7 @@ class PresensiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(presensi $presensi)
+    public function destroy(Presensi $presensi)
     {
         //
     }

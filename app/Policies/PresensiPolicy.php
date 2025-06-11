@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\Presensi;
 use App\Models\User;
-use App\Models\presensi;
 use Illuminate\Auth\Access\Response;
 
 class PresensiPolicy
@@ -19,7 +19,7 @@ class PresensiPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, presensi $presensi): bool
+    public function view(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -35,7 +35,7 @@ class PresensiPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, presensi $presensi): bool
+    public function update(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -43,7 +43,7 @@ class PresensiPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, presensi $presensi): bool
+    public function delete(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -51,7 +51,7 @@ class PresensiPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, presensi $presensi): bool
+    public function restore(User $user, Presensi $presensi): bool
     {
         return true;
     }
@@ -59,7 +59,7 @@ class PresensiPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, presensi $presensi): bool
+    public function forceDelete(User $user, Presensi $presensi): bool
     {
         return true;
     }
