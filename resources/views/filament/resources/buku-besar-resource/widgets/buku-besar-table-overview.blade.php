@@ -39,7 +39,7 @@
                 <br><br>
                
                 <div class="col-sm-12" style="background-color:white;" align="center">
-                    <b>Tubes Heiko</b><br>
+                    <b>Heiko</b><br>
                     <b>Buku Besar</b><br>
                     <b>
                     Periode 

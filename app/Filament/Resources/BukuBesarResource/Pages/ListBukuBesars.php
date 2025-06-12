@@ -6,6 +6,9 @@ use App\Filament\Resources\BukuBesarResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
+// tambahan
+use App\Filament\Resources\BukuBesarResource\Widgets\BukuBesarTableOverview;
+
 class ListBukuBesars extends ListRecords
 {
     protected static string $resource = BukuBesarResource::class;
@@ -13,7 +16,15 @@ class ListBukuBesars extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // Actions\CreateAction::make(),
+        ];
+    }
+
+    // tambahan
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            BukuBesarTableOverview::class,
         ];
     }
 }
